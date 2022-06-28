@@ -1,16 +1,15 @@
 const Alexa = require('ask-sdk-core');
-//Estas variáveis são globais
+//estas variáveis são globais
 let alexaChoice = "";
 let myChoice = "";
 let myName = "";
 
-//É executado automaticamente quando o usuário dá o primeiro comando de voz (chama a skill)
+//é executado quando o usuário dá o primeiro comando de voz (chama a skill)
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
     },
     handle(handlerInput) {
-        //Faz a próxima pergunta
         const speakOutput = 'Ok, mas antes preciso saber com quem vou jogar. Como você se chama?';
 
         return handlerInput.responseBuilder
@@ -20,16 +19,13 @@ const LaunchRequestHandler = {
     }
 };
 
-// I) Captura nosso nome
 const CaptureNameIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'CaptureNameIntent';
     },
     handle(handlerInput) {
-        //Salva o nome na variável myName
         myName = handlerInput.requestEnvelope.request.intent.slots.myName.value;
-        //Faz a próxima pergunta
         const speakOutput = `Oi ${myName}! Prazer em te conhecer! Agora me conta qual você vai escolher: par, ou ímpar?`; 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -38,27 +34,19 @@ const CaptureNameIntentHandler = {
     }
 };
 
-// II) Captura nossa escolha (par ou ímpar)
 const CaptureChoiceIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'CaptureChoiceIntent';
     },
     handle(handlerInput) {
-        //Salva nossa escolha na variável myChoice como "par" ou como "ímpar"
         myChoice = handlerInput.requestEnvelope.request.intent.slots.choice.value;
-
-        //Queremos salvar quem ficou com par e quem ficou com ímpar
-        /* //COMPLETAR CÓDIGO AQUI <----------------------------
         if (myChoice === "par"){
-            //COMPLETAR COM CÓDIGO
+            alexaChoice = "ímpar";
         }else{
-            //lembre-se que alexaChoice significa se Alexa será par ou se será ímpar
             alexaChoice = "par"; 
         }
-        */
     
-        //Faz a próxima pergunta
         const speakOutput = `E eu fico com ${alexaChoice}! um, dois, três, jogar! Agora me diga quantos dedos você levantou.`; 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -67,31 +55,25 @@ const CaptureChoiceIntentHandler = {
     }
 };
 
-// III) Captura quantos dedos levantamos
 const CaptureHandIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'CaptureHandIntent';
     },
     handle(handlerInput) {
-        //Salva quantos dedos levantamos na variável myHand
         const myHand = handlerInput.requestEnvelope.request.intent.slots.hand.value / 1;
-        
-        //Precisamos fazer a Alexa executar sua jogada entre 0 e 5 sem que seja sempre o mesmo valor
-        const alexaHand = 0;//COMPLETAR CÓDIGO
-        //Soma dos dedos da Alexa com os nossos dedos
+    
+        const alexaHand = Math.floor(Math.random() * 5) / 1;
         const result = alexaHand + myHand;
         let decision = "";
+        let winner = "";
         let speakOutput = "";
         
-        //Precisamos saber se o resultado do jogo é um número par ou um número ímpar
-        /* //COMPLETAR CÓDIGO AQUI <----------------------------
-        if (COMPLETAR COM CÓDIGO){
-            COMPLETAR COM CÓDIGO
+        if (result % 2 === 0){
+            decision = "par";
         }else{
             decision = "ímpar"; 
         }
-        */
         
         if (decision === alexaChoice){
             speakOutput = `Eu escolhi ${alexaHand}, você escolheu ${myHand}, a soma das nossas mãos deu ${result}. Eba! eu venci!`;
@@ -101,11 +83,11 @@ const CaptureHandIntentHandler = {
     
         return handlerInput.responseBuilder
             .speak(speakOutput)
+            //.reprompt(speakOutput) este é o fim da execução planejada, por isso não utilizaremos o reprompt
             .getResponse();
     }
 };
 
-//Caso o usuário solicite ajuda à Alexa enquanto estiver no jogo
 const HelpIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
@@ -121,7 +103,6 @@ const HelpIntentHandler = {
     }
 };
 
-//Caso o usuário solicite sair à Alexa enquanto estiver no jogo
 const CancelAndStopIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
@@ -137,7 +118,6 @@ const CancelAndStopIntentHandler = {
     }
 };
 
-//Caso o usuário dê uma ordem inexistente à Alexa
 const FallbackIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
@@ -177,7 +157,6 @@ const IntentReflectorHandler = {
     }
 };
 
-//Caso ocorra algum erro durante o jogo
 const ErrorHandler = {
     canHandle() {
         return true;
@@ -194,7 +173,7 @@ const ErrorHandler = {
 };
 
  
-//Exporta e executa os comandos nessa precisa ordem
+ //exporta e executa os comandos nessa precisa ordem
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         LaunchRequestHandler,
