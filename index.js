@@ -19,7 +19,7 @@ const LaunchRequestHandler = {
     }
 };
 
-//Captura nosso nome
+//Captura o nosso nome
 const CaptureNameIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
