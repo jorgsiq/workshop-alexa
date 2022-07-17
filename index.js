@@ -4,7 +4,7 @@ let alexaChoice = "";
 let myChoice = "";
 let myName = "";
 
-//é executado quando o usuário dá o primeiro comando de voz (chama a skill)
+//É executado quando o usuário dá o primeiro comando de voz (chama a skill)
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
@@ -176,7 +176,7 @@ const ErrorHandler = {
 };
 
  
- //exporta e executa os comandos nessa precisa ordem
+ //Exporta e executa os comandos nessa precisa ordem
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         LaunchRequestHandler,
