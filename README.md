@@ -1,4 +1,4 @@
-[LEARN MORE](https://jorgesiqueira.com/post/alexa-for-everyone)
+[LEARN MORE](https://jorgesiqueira.com/post/alexa-for-everyone) (About the Workshop)
 
 ## Workshop Tools
 * JavaScript
